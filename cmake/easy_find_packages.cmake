@@ -52,7 +52,7 @@ macro(easy_find_packages lib)
 
     set(dependency_file_content "${dependency_file_content}\ncheck_required_components(${lib})")
     # Write the .cmake.in file using the specified output filename
-    set(cmake_in_filepath "${CMAKE_CURRENT_BINARY_DIR}/${lib}.cmake.in")
+    set(cmake_in_filepath "${CMAKE_CURRENT_BINARY_DIR}/${lib}Config.cmake.in")
     file(WRITE ${cmake_in_filepath} "${dependency_file_content}")
     message(STATUS "Generated ${cmake_in_filepath}")
 endmacro()
