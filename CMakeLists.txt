@@ -18,5 +18,6 @@ install(FILES
 install(
     FILES
         "cmake/create_package.cmake"
+        "cmake/easy_find_packages.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/
 )
