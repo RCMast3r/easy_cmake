@@ -26,7 +26,8 @@
             };
             packages.default = easy_cmake;
             overlayAttrs = {
-              inherit (config.packages) default;
+              inherit easy_cmake;
+              # inherit (config.packages) default;
             };
             legacyPackages =
               import nixpkgs {

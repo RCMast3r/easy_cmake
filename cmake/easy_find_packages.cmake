@@ -1,4 +1,5 @@
 # Define a macro to simplify finding multiple packages with options and generate a .cmake.in file
+
 macro(easy_find_packages lib)
     # Initialize a variable to store the content for the .cmake.in file
     set(dependency_file_content "@PACKAGE_INIT@\n\ninclude(CMakeFindDependencyMacro)\n\n")
@@ -16,13 +17,24 @@ macro(easy_find_packages lib)
         string(FIND "${package_command}" " " space_index)
         if(space_index EQUAL -1)
             set(package_name ${package_command})
+            set(using_components FALSE)
         else()
             string(SUBSTRING "${package_command}" 0 ${space_index} package_name)
+            set(using_components TRUE)
+            message(${space_index})
+            message(${package_name})
+            string(LENGTH ${package_command} length_of_package_command)
+            string(SUBSTRING ${package_command} "${space_index}" ${length_of_package_command} package_components)
+            string(SUBSTRING ${package_components} 1 -1 package_components)
+            string(REPLACE " " ";" package_components ${package_components})
         endif()
 
-        # Execute the find_package command with the specified options
-        execute_process(COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --cyan "Running: find_package(${package_command})")
-        find_package(${package_command})
+        if(NOT ${using_components})
+            find_package(${package_name} REQUIRED)
+        else()
+            message(STATUS "finding components ${package_components}")
+            find_package(${package_name} REQUIRED COMPONENTS ${package_components})
+        endif()
 
         # Check for errors in finding the package
         if(NOT ${package_name}_FOUND)
@@ -30,20 +42,17 @@ macro(easy_find_packages lib)
         endif()
 
         # Append to the .cmake.in file content
-        string(REPLACE " " ";" package_arg ${package_arg})
-        set(dependency_file_content "${dependency_file_content}find_dependency(${package_arg})\n")
+        if(using_components)
+            string(REPLACE ";" " " package_components "${package_components}")
+            set(dependency_file_content "${dependency_file_content}find_dependency(${package_name} REQUIRED COMPONENTS ${package_components})\n")
+        else()
+            set(dependency_file_content "${dependency_file_content}find_dependency(${package_name} REQUIRED)\n")
+        endif()
     endforeach()
 
+    set(dependency_file_content "${dependency_file_content}\ncheck_required_components(${lib})")
     # Write the .cmake.in file using the specified output filename
     set(cmake_in_filepath "${CMAKE_CURRENT_BINARY_DIR}/${lib}.cmake.in")
     file(WRITE ${cmake_in_filepath} "${dependency_file_content}")
     message(STATUS "Generated ${cmake_in_filepath}")
 endmacro()
-
-# # Example usage:
-# # Call the macro with the desired packages and options
-# easy_find_packages(MyProjectConfig
-#     "Boost REQUIRED COMPONENTS system"  # Boost with components
-#     "Qt5 REQUIRED Widgets"              # Qt5 with Widgets
-#     "Eigen3 REQUIRED"                   # Eigen3 without components
-# )
