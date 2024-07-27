@@ -18,6 +18,5 @@ install(FILES
 install(
     FILES
         "cmake/create_package.cmake"
-        "cmake/toolchain-arm-none-eabi-gcc.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/
 )

@@ -5,8 +5,4 @@ stdenv.mkDerivation rec {
   version = "0.1.0";
   src = ./.;
   nativeBuildInputs = [ cmake ];
-  # dontPatch = true;
-  # dontFixup = true;
-  # dontStrip = true;
-  # dontPatchELF = true;
 }
