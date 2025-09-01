@@ -11,19 +11,18 @@ macro(make_cmake_package lib ns)
   )
   
   install(EXPORT ${lib}Targets
-        FILE ${lib}Targets.cmake
-        NAMESPACE ${ns}::
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${lib}
-    )
+      FILE ${lib}Targets.cmake
+      NAMESPACE ${ns}::
+      DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${lib}
+  )
 
-   include(CMakePackageConfigHelpers)
-   configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/${lib}Config.cmake.in
-    "${CMAKE_CURRENT_BINARY_DIR}/${lib}Config.cmake"
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${lib}
-    )
-    install(FILES
-          "${CMAKE_CURRENT_BINARY_DIR}/${lib}Config.cmake"
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${lib}
-    )
-    install()
+  include(CMakePackageConfigHelpers)
+  configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/${lib}Config.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/${lib}Config.cmake"
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${lib}
+  )
+  install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/${lib}Config.cmake"
+      DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${lib}
+  )
 endmacro()
